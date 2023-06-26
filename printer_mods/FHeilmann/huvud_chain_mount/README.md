@@ -24,4 +24,4 @@ Designed for the Trident but will also work on a V2.4, just be conscious of clea
 
 ![](./images/huvud_mount_install1.png)
 
-![](./images/huvud_mount_install2.png)
+![](./images/huvud_mount_install2.png) aaa
