@@ -61,8 +61,9 @@ jobs:
           tar -zxf admesh-0.98.4.tar.gz -C ${{ env.admesh-temp-dir }}
           cd ${{ env.admesh-temp-dir }}/admesh-0.98.4
           ./configure
-          make
+          make -j4
           chmod +x admesh
+          mkdir -p ${{ github.workspace }}/bin/admesh/admesh
           cp admesh ${{ github.workspace }}/bin/admesh/admesh
       - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
         name: Install Python packages
