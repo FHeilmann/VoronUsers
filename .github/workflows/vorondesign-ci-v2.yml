@@ -91,7 +91,7 @@ jobs:
         run: |
           for file in ${{ steps.find-stls.outputs.STLS }}; do
             echo "$file found!"
-            ${{ github.workspace }}/.workflow_files/validate.py $file || touch failed
+            ${{ github.workspace }}/.workflow_files/validate-stl.py $file || touch failed
           done
           if [ -f "failed" ]; then
             echo "Error occurred while validating STLs."
