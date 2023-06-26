@@ -17,6 +17,15 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
+      - name: Check for whitespace in folders/filenames
+        run: |
+          ret_val=0
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ $file =~ " " ]]; then
+              echo '$file contains whitespace!'
+              ret_val=1
+          done
+          return $ret_val
       - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         run: |
@@ -61,12 +70,9 @@ jobs:
       - name: Find STLs 🔍
         id: find-files
         run: |
-          FOUND_STLS=$(find ${{ github.workspace }} -type f -iname '*.STL')
-          echo $FOUND_STLS
-          FOUND_STLS=$(echo $FOUND_STLS | tr '\n' ' ')
-          echo $FOUND_STLS
+          FOUND_STLS=$(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' ')
           echo "STLS=$FOUND_STLS" >> "$GITHUB_OUTPUT"
-      - name: Print STLs 
+      - name: Print STLs 📃
         id: print_stls
         run: |
           for file in ${{ steps.find-files.outputs.STLS }}; do
