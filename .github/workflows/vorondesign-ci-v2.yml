@@ -17,16 +17,15 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
+          
       - name: Perform sparse checkout
         id: sparse-checkout
         run: |
           git clone --filter=blob:none --no-checkout ${{ github.server_url }}/${{ github.repository }} ${{ github.workspace }}
-          git sparse-checkout init --cone
+          git sparse-checkout init --no-cone
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            git sparse-checkout set /$file
-          done
+          git sparse-checkout set ${{ steps.changed-files.outputs.all_changed_files }} --skip-checks
       - name: List all checked out files
         run: |
           cd ${{ github.workspace }}
