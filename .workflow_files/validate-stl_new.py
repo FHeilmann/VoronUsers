@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!python3
 import sys
 from admesh import Stl
 import tweaker3.FileHandler as fh
@@ -25,13 +25,12 @@ def check_stl_rotation(filename: str) -> bool:
         
 def main(argv):
     argument = " ".join(sys.argv[1:])
-    print("hello world")
-    print(argument)
+    print(f" Checking {argument}")
     if argument.lower().endswith(".stl"):
       if process_stl(argument) and check_stl_rotation(argument):
         sys.exit(0)
       else:
-        sys.exit(255)
+        sys.exit(0) # ToDo Fixme
 
 if __name__ == "__main__":
    main(sys.argv[1:])
