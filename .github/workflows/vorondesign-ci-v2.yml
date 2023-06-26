@@ -40,7 +40,7 @@ jobs:
         env:
           cache-name: cache-admesh
         with:
-          path: ${{ github.workspace }}/bin/admesh/
+          path: ${{ github.workspace }}/bin/admesh
           key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Cache python packages
         uses: actions/cache@v3
@@ -66,9 +66,13 @@ jobs:
           mkdir -p ${{ github.workspace }}/bin/admesh
           cp admesh ${{ github.workspace }}/bin/admesh/
           cp -R .libs ${{ github.workspace }}/bin/admesh/
-      - name: Install Python packages
+      - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
+        name: Install tweaker3 from source
         run: |
           pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
+        name: Install Python packages
+        run: |
+          pip install tweaker3
           pip install pykwalify
       - name: Run tools
         id: run-tools
