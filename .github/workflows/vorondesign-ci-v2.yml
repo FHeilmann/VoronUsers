@@ -4,20 +4,17 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 jobs:
-  Voron-CI-v2:
+  VoronUsers-PR:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     steps:
-      - name: Get Changed files for whitespace check 🔀
+      - name: Getting PR file changelist for whitespace check 🔀
         id: changed-files-comma
         uses: tj-actions/changed-files@v37
         with:
           separator: ","
-      - name: Get Changed files from PR 🔀
-        id: changed-files
-        uses: tj-actions/changed-files@v37
-      - name: Check for whitespace in folders/filenames 🔍
+      - name: Check for whitespace in folders/filenames ✅
         run: |
           ret_val=0
           IFS=$',' 
@@ -32,6 +29,9 @@ jobs:
           exit $ret_val
         shell:
           bash
+      - name: Get PR file changelist 🔀
+        id: changed-files
+        uses: tj-actions/changed-files@v37
       - name: List all changed files 📃
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
@@ -70,6 +70,7 @@ jobs:
         run: |
           pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
           pip install pykwalify
+          pip install admesh
       - name: Install admesh (cached) 🛠️
         uses: awalsh128/cache-apt-pkgs-action@v1.3.0
         with:
@@ -91,7 +92,7 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/.workflow_files/validate-stl.py
           for file in ${{ steps.find-stls.outputs.STLS }}; do
-            ${{ github.workspace }}/.workflow_files/validate-stl.py $file || touch failed
+            ${{ github.workspace }}/.workflow_files/validate-stl_new.py $file || touch failed
           done
           if [ -f "failed" ]; then
             echo "Error occurred while validating STLs."
