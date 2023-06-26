@@ -14,19 +14,27 @@ jobs:
         uses: tj-actions/changed-files@v37
         with:
           separator: ","
+      - name: Create changed files array 🔀
+        id: changed-files-array
+        run: |
+          IFS=$',' 
+          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+          echo "STLS=$MODIFIED_FILES_ARRAY" >> "$GITHUB_OUTPUT"
+          unset IFS
+        shell:
+          bash
       - name: List all changed files 📃
         run: |
-          IFS=$',' read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
-          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
+          for file in "${{ steps.changed-files.outputs.all_changed_files }}"; do
             echo "$file was changed"
           done
-          unset IFS
         shell:
           bash
       - name: Check for whitespace in folders/filenames
         run: |
           ret_val=0
-          IFS=$',' read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+          IFS=$',' 
+          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
           for file in "${MODIFIED_FILES_ARRAY[@]}"; do
             if [[ $file = *[[:space:]]* ]]; then
               echo "$file contains whitespace!"
@@ -44,7 +52,8 @@ jobs:
           git sparse-checkout init --no-cone
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
-          IFS=$',' read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+          IFS=$',' 
+          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
           for file in "${MODIFIED_FILES_ARRAY[@]}"; do
             git sparse-checkout add "$file" --skip-checks
           done
