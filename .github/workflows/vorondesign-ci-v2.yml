@@ -64,8 +64,7 @@ jobs:
           make -j4
           chmod +x admesh
           mkdir -p ${{ github.workspace }}/bin/admesh
-          cp admesh libadmesh.la ${{ github.workspace }}/bin/admesh/
-          cp -R .libs ${{ github.workspace }}/bin/admesh/
+          cp -R . ${{ github.workspace }}/bin/admesh/
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages
         run: |
