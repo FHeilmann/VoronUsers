@@ -36,6 +36,7 @@ jobs:
           python-version: '3.11'
           cache: 'pip' # caching pip dependencies
       - name: Cache admesh
+        uses: actions/cache@v3
         id: cache-admesh
         env:
           cache-name: cache-admesh
