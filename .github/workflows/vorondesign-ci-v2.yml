@@ -7,6 +7,10 @@ jobs:
     permissions:
       pull-requests: read
     steps:
+      - name: Sparse Checkout
+        id: sparse-checkout
+        run: |
+          git clone ${{ github.server_url }}/${{ github.repository }} --filter=blob:none --no-checkout
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v37
