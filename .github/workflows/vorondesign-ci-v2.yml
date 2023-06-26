@@ -63,7 +63,7 @@ jobs:
           ./configure
           make -j4
           chmod +x admesh
-          mkdir -p ${{ github.workspace }}/bin/admesh/admesh
+          mkdir -p ${{ github.workspace }}/bin/admesh
           cp admesh ${{ github.workspace }}/bin/admesh/admesh
       - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
         name: Install Python packages
