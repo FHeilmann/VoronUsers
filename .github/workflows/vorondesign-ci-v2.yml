@@ -4,6 +4,9 @@ on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    if: github.event_name != 'push'
+    permissions:
+      pull-requests: read
     steps:
       - name: Get Changed Files
         id: changed-files
