@@ -40,7 +40,7 @@ jobs:
         env:
           cache-name: cache-admesh
         with:
-          path: ${{ github.workspace }}/bin/admesh
+          path: ${{ github.workspace }}/bin/admesh-0.98.4
           key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Cache Python
         uses: actions/cache@v3
@@ -53,18 +53,17 @@ jobs:
       - if: ${{ steps.cache-admesh.outputs.cache-hit != 'true' }}
         name: Install admesh
         env: 
-          admesh-temp-dir: ${{ github.workspace }}/temp-admesh
+          bin-dir: ${{ github.workspace }}/bin
+          admesh-dir: ${{ env.bin-dir }}/admesh-0.98.4
         run: |
           echo "Admesh cache miss; fetching and building ..."
-          mkdir -p ${{ env.admesh-temp-dir }}
+          mkdir -p ${{ env.bin-dir }}
           wget https://github.com/admesh/admesh/releases/download/v0.98.4/admesh-0.98.4.tar.gz
-          tar -zxf admesh-0.98.4.tar.gz -C ${{ env.admesh-temp-dir }}
-          cd ${{ env.admesh-temp-dir }}/admesh-0.98.4
+          tar -zxf admesh-0.98.4.tar.gz -C ${{ env.bin-dir }}
+          cd ${{ env.admesh-dir }}
           ./configure
           make -j4
           chmod +x admesh
-          mkdir -p ${{ github.workspace }}/bin/admesh
-          cp -R . ${{ github.workspace }}/bin/admesh/
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages
         run: |
@@ -75,7 +74,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/bin
           tree -a
-          ${{ github.workspace }}/bin/admesh/admesh --version
+          ${{ env.admesh-dir }}/admesh --version
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event!!!"
