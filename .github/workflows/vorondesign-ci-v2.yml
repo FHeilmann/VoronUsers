@@ -26,7 +26,7 @@ jobs:
               ret_val=1
             fi
           done
-          return $ret_val
+          exit $ret_val
       - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         run: |
