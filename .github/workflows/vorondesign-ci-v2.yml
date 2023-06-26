@@ -12,23 +12,32 @@ jobs:
       - name: Get Changed files from PR 🔀
         id: changed-files
         uses: tj-actions/changed-files@v37
+        with:
+          separator: ","
       - name: List all changed files 📃
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          IFS=$',' read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files-comma.outputs.all_changed_files }}"
+          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
             echo "$file was changed"
           done
+          unset IFS
+        shell:
+          bash
       - name: Check for whitespace in folders/filenames
         run: |
           ret_val=0
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            if [[ "$file" = *[[:space:]]* ]]; then
+          IFS=$',' read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files-comma.outputs.all_changed_files }}"
+          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
+            if [[ $file = *[[:space:]]* ]]; then
               echo "$file contains whitespace!"
               ret_val=1
             else
-              echo '$file does not contain whitespace!'
+              echo "$file does not contain whitespace!"
             fi
           done
-          exit $ret_val
+          unset IFS
+        shell:
+          bash
       - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         run: |
