@@ -52,6 +52,11 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           tree -a -I '.git'
+      - name: Install admesh (cached) 🛠️
+        uses: awalsh128/cache-apt-pkgs-action@v1.3.0
+        with:
+          packages: admesh
+          version: 1.0
       - name: Setup python 3.11 🐍
         id: python311
         uses: actions/setup-python@v4
@@ -71,11 +76,6 @@ jobs:
           pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
           pip install pykwalify
           pip install admesh
-      - name: Install admesh (cached) 🛠️
-        uses: awalsh128/cache-apt-pkgs-action@v1.3.0
-        with:
-          packages: admesh
-          version: 1.0
       - name: Show tool versions 🏃
         id: run-tools
         run: |
