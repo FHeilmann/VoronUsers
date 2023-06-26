@@ -66,8 +66,7 @@ jobs:
           mkdir -p ${{ github.workspace }}/bin/admesh
           cp admesh ${{ github.workspace }}/bin/admesh/
           cp -R .libs ${{ github.workspace }}/bin/admesh/
-      - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
-        name: Install Python packages
+      - name: Install Python packages
         run: |
           pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
           pip install pykwalify
