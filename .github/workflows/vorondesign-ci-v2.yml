@@ -14,20 +14,14 @@ jobs:
         uses: tj-actions/changed-files@v37
         with:
           separator: ","
-      - name: Create changed files array 🔀
-        id: changed-files-array
+      - name: List all changed files 📃
         run: |
           IFS=$',' 
           read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
-          echo "STLS=$MODIFIED_FILES_ARRAY" >> "$GITHUB_OUTPUT"
-          unset IFS
-        shell:
-          bash
-      - name: List all changed files 📃
-        run: |
-          for file in "${{ steps.changed-files.outputs.all_changed_files }}"; do
+          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
             echo "$file was changed"
           done
+          unset IFS
         shell:
           bash
       - name: Check for whitespace in folders/filenames
