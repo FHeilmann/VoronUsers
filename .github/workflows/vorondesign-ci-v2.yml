@@ -10,7 +10,7 @@ jobs:
       - name: Sparse Checkout
         id: sparse-checkout
         run: |
-          git clone --filter=blob:none --no-checkout --depth 1 --sparse "https://${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
+          git clone --filter=blob:none --no-checkout --depth 1 --sparse ${{ github.server_url }}/${{ github.repository }} .
           echo "git sparse-checkout set exclude directory"
           git sparse-checkout set --no-cone "/*"
           echo "git sparse-checkout without cone" # cone not allow pattern filter, therefore don't use cone.
