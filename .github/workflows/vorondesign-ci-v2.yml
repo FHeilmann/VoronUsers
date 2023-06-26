@@ -55,7 +55,7 @@ jobs:
       - name: Install admesh (cached) 🛠️
         uses: awalsh128/cache-apt-pkgs-action@v1.3.0
         with:
-          packages: admesh
+          packages: admesh, libadmesh-dev
           version: 1.0
       - name: Setup python 3.11 🐍
         id: python311
@@ -73,9 +73,7 @@ jobs:
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages 🛠️
         run: |
-          pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
-          pip install pykwalify
-          pip install admesh
+          pip install pykwalify admesh git+https://github.com/ChristophSchranz/Tweaker-3.git
       - name: Show tool versions 🏃
         id: run-tools
         run: |
