@@ -53,15 +53,13 @@ jobs:
       - if: ${{ steps.cache-admesh.outputs.cache-hit != 'true' }}
         name: Install admesh
         env: 
-          bin-dir: ${{ github.workspace }}/bin
-          admesh-dir: ${{ github.workspace }}/bin/admesh-0.98.4
+          admesh-version: 0.98.4
         run: |
           echo "Admesh cache miss; fetching and building ..."
-          mkdir -p ${{ env.bin-dir }}
-          wget https://github.com/admesh/admesh/releases/download/v0.98.4/admesh-0.98.4.tar.gz
-          tar -zxf admesh-0.98.4.tar.gz -C ${{ env.bin-dir }}
-          cd ${{ env.admesh-dir }}
-          ./configure
+          wget https://github.com/admesh/admesh/releases/download/v${{ env.admesh-version }}/admesh-${{ env.admesh-version }}.tar.gz
+          tar -zxf admesh-${{ env.admesh-version }}.tar.gz
+          cd admesh-${{ env.admesh-version }}
+          ./configure --prefix=/tools/admesh
           make -j4
           chmod +x admesh
           make install
