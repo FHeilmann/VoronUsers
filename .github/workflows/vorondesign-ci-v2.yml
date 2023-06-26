@@ -36,7 +36,6 @@ jobs:
             fi
           done
           unset IFS
-          exit $ret_val
         shell:
           bash
       - name: Perform Sparse Checkout 🛒
