@@ -1,10 +1,10 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: VoronUsers CI v2
+run-name: VoronUsers CI version 2 🚀
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 jobs:
-  Explore-GitHub-Actions:
+  Voron-CI-v2:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -48,13 +48,23 @@ jobs:
           pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
           pip install pykwalify
       - name: Install admesh (cached) 🛠️
-        uses: awalsh128/cache-apt-pkgs-action@latest
+        uses: awalsh128/cache-apt-pkgs-action@v1.3.0
         with:
           packages: admesh
           version: 1.0
-      - name: Run tools 🏃
+      - name: Show tool versions 🏃
         id: run-tools
         run: |
           admesh --version
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
+      - name: Find STLs 🔍
+        id: find-files
+        run: echo "STLS=$(find ${{ github.workspace }} -type f -iname '*.STL')" >> "$GITHUB_OUTPUT"
+      - name: Print STLs 
+        id: print_stls
+        run: |
+          for file in ${{ steps.find-files.outputs.STLS }}; do
+            echo "$file found!"
+          done
+        
