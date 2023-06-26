@@ -1,24 +1,14 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     steps:
-      - name: Sparse Checkout
-        id: sparse-checkout
-        run: |
-          git clone --filter=blob:none --no-checkout --depth 2 --sparse ${{ github.server_url }}/${{ github.repository }} .
-          echo "git sparse-checkout set exclude directory"
-          git sparse-checkout set --no-cone "/*"
-          echo "git sparse-checkout without cone" # cone not allow pattern filter, therefore don't use cone.
-          git sparse-checkout init
-          echo "git sparse-checkout list"
-          git sparse-checkout list
-          echo "git checkout"
-          git checkout "${GITHUB_SHA}"
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v37
