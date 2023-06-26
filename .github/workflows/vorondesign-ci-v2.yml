@@ -52,11 +52,14 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}
       - if: ${{ steps.cache-admesh.outputs.cache-hit != 'true' }}
         name: Install admesh
+        env: 
+          admesh-temp-dir: ${{ github.workspace }}/temp-admesh
         run: |
           echo "Admesh cache miss; fetching and building ..."
+          mdkir -p ${{ env.admesh-temp-dir }}
           wget https://github.com/admesh/admesh/releases/download/v0.98.4/admesh-0.98.4.tar.gz
-          tar -zxf admesh-0.98.4.tar.gz
-          cd ${ADMESH_DIR}
+          tar -zxf admesh-0.98.4.tar.gz -C ${{ env.admesh-temp-dir }}
+          cd ${{ env.admesh-temp-dir }}
           ./configure
           make
           chmod +x admesh
