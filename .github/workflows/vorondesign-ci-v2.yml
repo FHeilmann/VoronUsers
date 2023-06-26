@@ -62,6 +62,7 @@ jobs:
           ./configure --prefix=${{ github.workspace }}/tools/admesh
           make -j4
           chmod +x admesh
+          mkdir -p ${{ github.workspace }}/tools/admesh/
           cp -R . ${{ github.workspace }}/tools/admesh/
           ${{ github.workspace }}/tools/admesh/admesh --version
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
