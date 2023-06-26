@@ -24,6 +24,7 @@ jobs:
             if [[ $file =~ " " ]]; then
               echo '$file contains whitespace!'
               ret_val=1
+            fi
           done
           return $ret_val
       - name: Perform Sparse Checkout 🛒
