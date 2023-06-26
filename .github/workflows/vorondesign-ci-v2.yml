@@ -73,7 +73,8 @@ jobs:
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages 🛠️
         run: |
-          pip install pykwalify admesh git+https://github.com/ChristophSchranz/Tweaker-3.git
+          pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
+          pip install pykwalify admesh
       - name: Show tool versions 🏃
         id: run-tools
         run: |
