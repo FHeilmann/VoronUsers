@@ -54,7 +54,7 @@ jobs:
         name: Install admesh
         env: 
           bin-dir: ${{ github.workspace }}/bin
-          admesh-dir: ${{ env.bin-dir }}/admesh-0.98.4
+          admesh-dir: ${{ github.workspace }}/bin/admesh-0.98.4
         run: |
           echo "Admesh cache miss; fetching and building ..."
           mkdir -p ${{ env.bin-dir }}
@@ -64,6 +64,9 @@ jobs:
           ./configure
           make -j4
           chmod +x admesh
+          make install
+          which admesh
+          admesh --version
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages
         run: |
