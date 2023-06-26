@@ -89,6 +89,7 @@ jobs:
       - name: Check STLs 📃
         id: check-stls
         run: |
+          pip list
           chmod +x ${{ github.workspace }}/.workflow_files/validate-stl_new.py
           for file in ${{ steps.find-stls.outputs.STLS }}; do
             ${{ github.workspace }}/.workflow_files/validate-stl_new.py $file || touch failed
