@@ -31,8 +31,6 @@ jobs:
             if [[ $file = *[[:space:]]* ]]; then
               echo "$file contains whitespace!"
               ret_val=1
-            else
-              echo "$file does not contain whitespace!"
             fi
           done
           unset IFS
