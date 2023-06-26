@@ -61,11 +61,11 @@ jobs:
       - name: Find STLs 🔍
         id: find-files
         run: |
-          found-stls=$(find ${{ github.workspace }} -type f -iname '*.STL')
-          echo $found-stls
-          found-stls=$(echo $found-stls | tr '\n' ' ')
-          echo $found-stls
-          echo "STLS=$found-stls" >> "$GITHUB_OUTPUT"
+          FOUND_STLS=$(find ${{ github.workspace }} -type f -iname "*.STL')
+          echo $FOUND_STLS
+          FOUND_STLS=$(echo $FOUND_STLS | tr '\n' ' ')
+          echo $FOUND_STLS
+          echo "STLS=$FOUND_STLS" >> "$GITHUB_OUTPUT"
       - name: Print STLs 
         id: print_stls
         run: |
