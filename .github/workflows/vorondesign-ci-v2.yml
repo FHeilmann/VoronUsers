@@ -24,7 +24,7 @@ jobs:
           unset IFS
         shell:
           bash
-      - name: Check for whitespace in folders/filenames
+      - name: Check for whitespace in folders/filenames 🔍
         run: |
           ret_val=0
           IFS=$',' 
@@ -46,14 +46,9 @@ jobs:
           git sparse-checkout init --no-cone
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
-          IFS=$',' 
-          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
-          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             git sparse-checkout add "$file" --skip-checks
           done
-          unset IFS
-        shell:
-          bash
       - name: List all checked out files 📁
         run: |
           cd ${{ github.workspace }}
@@ -88,14 +83,26 @@ jobs:
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
       - name: Find STLs 🔍
-        id: find-files
+        id: find-stls
         run: |
           FOUND_STLS=$(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' ')
           echo "STLS=$FOUND_STLS" >> "$GITHUB_OUTPUT"
       - name: Print STLs 📃
-        id: print_stls
+        id: print-stls
         run: |
-          for file in ${{ steps.find-files.outputs.STLS }}; do
+          for file in ${{ steps.find-stls.outputs.STLS }}; do
             echo "$file found!"
+          done
+      - name: Find Metadata files 🔍
+        id: find-metadata
+        run: |
+          FOUND_METADATA=$(echo $(find ${{ github.workspace }} -type f -iname '.metadata.yml') | tr '\n' ' ')
+          echo "METADATA=$FOUND_METADATA" >> "$GITHUB_OUTPUT"
+      - name: Check Metadata files 📃
+        id: check-metadata
+        run: |
+          for file in ${{ steps.find-metadata.outputs.METADATA }}; do
+            echo "$file found!"
+            pykwalify -d $file -s ${{ github.workspace }}/.workflow_files/yaml_schema.yml
           done
         
