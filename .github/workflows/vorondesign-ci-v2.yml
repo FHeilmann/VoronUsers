@@ -36,6 +36,7 @@ jobs:
             fi
           done
           unset IFS
+          exit $ret_val
         shell:
           bash
       - name: Perform Sparse Checkout 🛒
@@ -47,7 +48,7 @@ jobs:
           git checkout pr_under_test
           IFS=$',' read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
           for file in "${MODIFIED_FILES_ARRAY[@]}"; do
-            git sparse-checkout add $file --skip-checks
+            git sparse-checkout add '$file' --skip-checks
           done
           unset IFS
         shell:
