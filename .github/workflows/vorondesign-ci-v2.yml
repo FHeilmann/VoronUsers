@@ -40,7 +40,7 @@ jobs:
         env:
           cache-name: cache-admesh
         with:
-          path: ${{ github.workspace }}/bin/admesh-0.98.4
+          path: ~/tools/admesh
           key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Cache Python
         uses: actions/cache@v3
@@ -59,7 +59,7 @@ jobs:
           wget https://github.com/admesh/admesh/releases/download/v${{ env.admesh-version }}/admesh-${{ env.admesh-version }}.tar.gz
           tar -zxf admesh-${{ env.admesh-version }}.tar.gz
           cd admesh-${{ env.admesh-version }}
-          ./configure --prefix=/tools/admesh
+          ./configure --prefix=~/tools/admesh
           make -j4
           chmod +x admesh
           make install
