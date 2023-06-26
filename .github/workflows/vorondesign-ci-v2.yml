@@ -57,11 +57,11 @@ jobs:
         with:
           packages: admesh, libadmesh-dev
           version: 1.0
-      - name: Setup python 3.11 🐍
-        id: python311
+      - name: Setup python 3.10 🐍
+        id: python310
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
       - name: Handle python package cache 🧰
         uses: actions/cache@v3
         id: cache-python
