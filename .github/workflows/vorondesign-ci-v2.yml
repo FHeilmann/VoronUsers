@@ -24,7 +24,9 @@ jobs:
           git sparse-checkout init --cone
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
-          git sparse-checkout set ${{ steps.changed-files.outputs.all_changed_files }}
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            git sparse-checkout set /$file
+          done
       - name: List all checked out files
         run: |
           cd ${{ github.workspace }}
