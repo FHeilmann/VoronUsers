@@ -47,6 +47,7 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             git sparse-checkout add "$file" --skip-checks
           done
+          git sparse-checkout add .workflow_files
       - name: List all checked out files 📁
         run: |
           cd ${{ github.workspace }}
@@ -85,12 +86,17 @@ jobs:
         run: |
           FOUND_STLS=$(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' ')
           echo "STLS=$FOUND_STLS" >> "$GITHUB_OUTPUT"
-      - name: Print STLs 📃
-        id: print-stls
+      - name: Check STLs 📃
+        id: check-stls
         run: |
           for file in ${{ steps.find-stls.outputs.STLS }}; do
             echo "$file found!"
+            ${{ github.workspace }}/.workflow_files/validate.py $file || touch failed
           done
+          if [ -f "failed" ]; then
+            echo "Error occurred while validating STLs."
+            exit 255
+          fi
       - name: Find Metadata files 🔍
         id: find-metadata
         run: |
