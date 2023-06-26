@@ -75,7 +75,7 @@ jobs:
         id: run-tools
         run: |
           ${{ github.workspace }}/bin/admesh/admesh --version
-          pykwalify --version
+          echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
