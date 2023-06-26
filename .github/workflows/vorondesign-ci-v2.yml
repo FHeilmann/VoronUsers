@@ -90,9 +90,11 @@ jobs:
         id: check-stls
         run: |
           pip list
+          which python3
+          which pip 
           chmod +x ${{ github.workspace }}/.workflow_files/validate-stl_new.py
           for file in ${{ steps.find-stls.outputs.STLS }}; do
-            ${{ github.workspace }}/.workflow_files/validate-stl_new.py $file || touch failed
+            python3 ${{ github.workspace }}/.workflow_files/validate-stl_new.py $file || touch failed
           done
           if [ -f "failed" ]; then
             echo "Error occurred while validating STLs."
