@@ -17,6 +17,18 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
+      - name: Perform sparse checkout
+        id: sparse-checkout
+        run: |
+          git clone {{ github.server_url }}/${{ github.repository }} --filter=blob:none --no-checkout ${{ github.workspace }}
+          git sparse-checkout init --no-cone
+          git fetch origin ${{ github.ref }}:pr_under_test
+          git checkout pr_under_test
+          git sparse-checkout set ${{ steps.changed-files.outputs.all_changed_files }}
+      - name: List all checked out files
+        run: |
+          cd ${{ github.workspace }}
+          tree -a
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
