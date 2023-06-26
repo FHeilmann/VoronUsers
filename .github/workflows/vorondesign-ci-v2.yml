@@ -9,26 +9,19 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - name: Get Changed files from PR 🔀
-        id: changed-files
+      - name: Get Changed files for whitespace check 🔀
+        id: changed-files-comma
         uses: tj-actions/changed-files@v37
         with:
           separator: ","
-      - name: List all changed files 📃
-        run: |
-          IFS=$',' 
-          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
-          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
-            echo "$file was changed"
-          done
-          unset IFS
-        shell:
-          bash
+      - name: Get Changed files from PR 🔀
+        id: changed-files
+        uses: tj-actions/changed-files@v37
       - name: Check for whitespace in folders/filenames 🔍
         run: |
           ret_val=0
           IFS=$',' 
-          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files-comma.outputs.all_changed_files }}"
           for file in "${MODIFIED_FILES_ARRAY[@]}"; do
             if [[ $file = *[[:space:]]* ]]; then
               echo "$file contains whitespace!"
@@ -39,6 +32,11 @@ jobs:
           exit $ret_val
         shell:
           bash
+      - name: List all changed files 📃
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
       - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         run: |
@@ -52,7 +50,7 @@ jobs:
       - name: List all checked out files 📁
         run: |
           cd ${{ github.workspace }}
-          tree -a
+          tree -a -I '.git'
       - name: Setup python 3.11 🐍
         id: python311
         uses: actions/setup-python@v4
