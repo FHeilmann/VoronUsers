@@ -61,7 +61,7 @@ jobs:
       - name: Find STLs 🔍
         id: find-files
         run: |
-          FOUND_STLS=$(find ${{ github.workspace }} -type f -iname "*.STL')
+          FOUND_STLS=$(find ${{ github.workspace }} -type f -iname '*.STL')
           echo $FOUND_STLS
           FOUND_STLS=$(echo $FOUND_STLS | tr '\n' ' ')
           echo $FOUND_STLS
