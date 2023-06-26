@@ -74,6 +74,8 @@ jobs:
       - name: Run tools
         id: run-tools
         run: |
+          cd ${{ github.workspace }}/bin
+          tree -a
           ${{ github.workspace }}/bin/admesh/admesh --version
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
