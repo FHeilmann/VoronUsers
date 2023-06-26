@@ -21,7 +21,7 @@ jobs:
         id: sparse-checkout
         run: |
           git clone --filter=blob:none --no-checkout ${{ github.server_url }}/${{ github.repository }} ${{ github.workspace }}
-          git sparse-checkout init --no-cone
+          git sparse-checkout init --cone
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
           git sparse-checkout set ${{ steps.changed-files.outputs.all_changed_files }}
