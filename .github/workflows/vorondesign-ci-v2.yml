@@ -12,15 +12,13 @@ jobs:
         run: |
           git clone --filter=blob:none --no-checkout --depth 1 --sparse "https://${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
           echo "git sparse-checkout set exclude directory"
-          git sparse-checkout set --no-cone "${{ env.SPARSECHECKOUT_DIR }}" "/*"
+          git sparse-checkout set --no-cone "/*"
           echo "git sparse-checkout without cone" # cone not allow pattern filter, therefore don't use cone.
           git sparse-checkout init
           echo "git sparse-checkout list"
           git sparse-checkout list
           echo "git checkout"
           git checkout "${GITHUB_SHA}"
-        env:
-          SPARSECHECKOUT_DIR: /
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v37
