@@ -21,9 +21,11 @@ jobs:
         run: |
           ret_val=0
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            if [[ $file =~ " " ]]; then
+            if [[ $file = *[[:space:]]* ]]; then
               echo '$file contains whitespace!'
               ret_val=1
+            else
+              echo '$file does not contain whitespace!'
             fi
           done
           exit $ret_val
