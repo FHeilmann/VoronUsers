@@ -60,7 +60,12 @@ jobs:
           tweaker3 --version
       - name: Find STLs 🔍
         id: find-files
-        run: echo "STLS=$(find ${{ github.workspace }} -type f -iname '*.STL')" >> "$GITHUB_OUTPUT"
+        run: |
+          found-stls=$(find ${{ github.workspace }} -type f -iname '*.STL')
+          echo $found-stls
+          found-stls=$(echo $found-stls | tr '\n' ' ')
+          echo $found-stls
+          echo "STLS=$found-stls" >> "$GITHUB_OUTPUT"
       - name: Print STLs 
         id: print_stls
         run: |
