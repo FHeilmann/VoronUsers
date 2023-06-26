@@ -9,7 +9,7 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - name: Get Changed Files
+      - name: Get Changed files from PR 🔀
         id: changed-files
         uses: tj-actions/changed-files@v37
       - name: List all changed files
@@ -17,8 +17,7 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
-          
-      - name: Perform sparse checkout
+      - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         run: |
           git clone --filter=blob:none --no-checkout ${{ github.server_url }}/${{ github.repository }} ${{ github.workspace }}
@@ -26,10 +25,47 @@ jobs:
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
           git sparse-checkout set ${{ steps.changed-files.outputs.all_changed_files }} --skip-checks
-      - name: List all checked out files
+      - name: List all checked out files 📁
         run: |
           cd ${{ github.workspace }}
           tree -a
+      - name: Setup python 3.11
+        id: python311
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip' # caching pip dependencies
+      - name: Cache admesh
+        id: cache-admesh
+        env:
+          cache-name: cache-admesh
+        with:
+          path: ${{ github.workspace }}/bin/admesh
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+      - if: ${{ steps.cache-admesh.outputs.cache-hit != 'true' }}
+        name: Install admesh
+        run: |
+          echo "Admesh cache miss; fetching and building ..."
+          wget https://github.com/admesh/admesh/releases/download/v0.98.4/admesh-0.98.4.tar.gz
+          tar -zxf admesh-0.98.4.tar.gz
+          cd ${ADMESH_DIR}
+          ./configure
+          make
+          chmod +x admesh
+          cp admesh ${{ github.workspace }}/bin/admesh/admesh
+      - if: ${{ steps.cp310.outputs.cache-hit != 'true' }}
+        name: Install Python packages
+        run: |
+          pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
+          pip install pykwalify
+      - name: Run tools
+        id: run-tools
+        run: |
+          ${{ github.workspace }}/bin/admesh/admesh --version
+          pykwalify --version
+          tweaker3 --version
+          
+        uses: actions/cache@v3
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
