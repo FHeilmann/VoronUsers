@@ -62,9 +62,8 @@ jobs:
           ./configure --prefix=${{ github.workspace }}/tools/admesh
           make -j4
           chmod +x admesh
-          make install
-          which admesh
-          admesh --version
+          cp -R . ${{ github.workspace }}/tools/admesh/
+          ${{ github.workspace }}/tools/admesh/admesh --version
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages
         run: |
