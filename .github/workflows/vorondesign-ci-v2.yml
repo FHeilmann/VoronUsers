@@ -40,7 +40,7 @@ jobs:
         env:
           cache-name: cache-admesh
         with:
-          path: ${{ github.workspace }}/bin/admesh
+          path: ${{ github.workspace }}/bin/admesh/
           key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Cache python packages
         uses: actions/cache@v3
