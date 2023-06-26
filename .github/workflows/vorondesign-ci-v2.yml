@@ -70,7 +70,7 @@ jobs:
         name: Install tweaker3 from source
         run: |
           pip install git+https://github.com/ChristophSchranz/Tweaker-3.git
-        name: Install Python packages
+      - name: Install Python packages
         run: |
           pip install tweaker3
           pip install pykwalify
