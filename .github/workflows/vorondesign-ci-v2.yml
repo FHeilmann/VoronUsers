@@ -56,7 +56,7 @@ jobs:
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
       - name: Find STLs 🔍
-        uses: jeertmans/filesfinder@v0.4.6
+        uses: jeertmans/filesfinder@v0.4.5
         with:
           args: " --dir ${{github.workspace}} *.STL *.stl"
         id: find-stls
