@@ -9,32 +9,12 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - name: Getting PR file changelist for whitespace check 🔀
-        id: changed-files-comma
-        uses: tj-actions/changed-files@v37
-        with:
-          separator: ","
-      - name: Check for whitespace in folders/filenames ✅
-        run: |
-          ret_val=0
-          IFS=$',' 
-          read -a MODIFIED_FILES_ARRAY <<< "${{ steps.changed-files-comma.outputs.all_changed_files }}"
-          for file in "${MODIFIED_FILES_ARRAY[@]}"; do
-            if [[ $file = *[[:space:]]* ]]; then
-              echo "$file contains whitespace!"
-              ret_val=1
-            fi
-          done
-          unset IFS
-          exit $ret_val
-        shell:
-          bash
-      - name: Get PR file changelist 🔀
+      - name: Get changed files and check whitespace 🔍
         id: changed-files
-        uses: tj-actions/changed-files@v37
+        uses: FHeilmann/pr-changed-files-check-whitespace@v1
       - name: List all changed files 📃
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          for file in ${{ steps.changed-files.outputs.changed_files }}; do
             echo "$file was changed"
           done
       - name: Perform Sparse Checkout 🛒
@@ -44,7 +24,7 @@ jobs:
           git sparse-checkout init --no-cone
           git fetch origin ${{ github.ref }}:pr_under_test
           git checkout pr_under_test
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          for file in ${{ steps.changed-files.outputs.changed_files }}; do
             git sparse-checkout add "$file" --skip-checks
           done
           git sparse-checkout add .workflow_files
