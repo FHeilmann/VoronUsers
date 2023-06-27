@@ -14,9 +14,11 @@ jobs:
         uses: FHeilmann/pr-changed-files-check-whitespace@main
       - name: List all changed files 📃
         run: |
+          echo "::group::changed-files"
           for file in ${{ steps.changed-files.outputs.changed_files }}; do
-            echo "$file was changed"
+            echo "Changed file: $file"
           done
+          echo "::endgroup::"
       - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         uses: FHeilmann/sparse-checkout@main
@@ -54,15 +56,15 @@ jobs:
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
       - name: Find STLs 🔍
+        uses: jeertmans/filesfinder@v0.4.6
+        with:
+          args: " --dir ${{github.workspace}} *.STL *.stl"
         id: find-stls
-        run: |
-          FOUND_STLS=$(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' ')
-          echo "STLS=$FOUND_STLS" >> "$GITHUB_OUTPUT"
       - name: Check STLs 📃
         id: check-stls
         run: |
           chmod +x ${{ github.workspace }}/.workflow_files/validate-stl_new.py
-          for file in ${{ steps.find-stls.outputs.STLS }}; do
+          for file in ${{ steps.find-stls.outputs.files }}; do
             python3 ${{ github.workspace }}/.workflow_files/validate-stl_new.py $file || touch failed
           done
           if [ -f "failed" ]; then
