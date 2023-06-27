@@ -55,32 +55,26 @@ jobs:
           admesh --version
           echo "Pykwalify $(pykwalify --version)"
           tweaker3 --version
-      - name: Find STLs 🔍
-        uses: jeertmans/filesfinder@v0.4.5
-        with:
-          args: " --dir ${{github.workspace}} *.STL *.stl"
-        id: find-stls
-      - name: Check STLs 📃
+      - name: Check STLs ✅
         id: check-stls
         run: |
+          echo "::group::check-stls"
           chmod +x ${{ github.workspace }}/.workflow_files/validate-stl_new.py
-          for file in ${{ steps.find-stls.outputs.files }}; do
+          for file in $(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' '); do
             python3 ${{ github.workspace }}/.workflow_files/validate-stl_new.py $file || touch failed
           done
           if [ -f "failed" ]; then
             echo "Error occurred while validating STLs."
             exit 255
           fi
-      - name: Find Metadata files 🔍
-        id: find-metadata
-        run: |
-          FOUND_METADATA=$(echo $(find ${{ github.workspace }} -type f -iname '.metadata.yml') | tr '\n' ' ')
-          echo "METADATA=$FOUND_METADATA" >> "$GITHUB_OUTPUT"
-      - name: Check Metadata files 📃
+          echo "::endgroup::"
+      - name: Check Metadata files ✅
         id: check-metadata
         run: |
-          for file in ${{ steps.find-metadata.outputs.METADATA }}; do
-            echo "$file found!"
+          echo "::group::check-metadata"
+          for file in $(echo $(find ${{ github.workspace }} -type f -iname '.metadata.yml') | tr '\n' ' '); do
+            echo "Checking metadata file $file.."
             pykwalify -d $file -s ${{ github.workspace }}/.workflow_files/yaml_schema.yml
           done
+          echo "::endgroup::"
         
