@@ -27,7 +27,7 @@ jobs:
           folders: ".workflow_files"
           patterns: ""
           path: ${{github.workspace}}
-      - name: Install admesh (cached) 🛠️
+      - name: Install apt packages (cached) 🛠️
         uses: awalsh128/cache-apt-pkgs-action@v1.3.0
         with:
           packages: admesh, libadmesh-dev
@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - name: Handle python package cache 🧰
+      - name: Handle python cache 🧰
         uses: actions/cache@v3
         id: cache-python
         env:
@@ -46,7 +46,7 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: ${{ runner.os }}-build-${{ env.cache-name }}
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
-        name: Install Python packages 🛠️
+        name: Install Python packages (cached) 🛠️
         run: |
           pip install pykwalify admesh git+https://github.com/ChristophSchranz/Tweaker-3.git
       - name: Show tool versions 🏃
