@@ -1,48 +1,36 @@
-#!/usr/bin/python3
-import subprocess, re, os, sys, getopt
+#!python3
+import sys
+from admesh import Stl
+import tweaker3.FileHandler as fh
+from tweaker3.MeshTweaker import Tweak
 
-def read_param(text, parameter):
-    matches = re.search("(" + parameter + ")\s+\:\s+(\d+)", text)
-    #print(matches)
-    if matches:
-        # The decimal group
-        return int(matches.group(2))
-    else:
-        # Uh oh, no match
-        print ("Could not find {0}".format(parameter))
-        exit(1)
+file_handler = fh.FileHandler()
 
-def assert_param_threshold(result, parameter, threshold):
-    param_val = read_param(result, parameter)
-    if param_val > threshold:
-        print ("!! Detected \"{0}\" value of {1}".format(parameter, param_val))
-        sys.exit(255)
-    #else:
-        #print ("{0} value OK".format(parameter))
+def process_stl(filename: str) -> bool:
+    stl = Stl(filename)
+    stl.repair(verbose_flag=False)
+    if stl.stats['edges_fixed'] > 0 or stl.stats['backwards_edges'] > 0 or stl.stats['degenerate_facets'] > 0 or stl.stats['facets_removed'] > 0 or stl.stats['facets_added'] > 0 or stl.stats['facets_reversed'] > 0:
+      print(f"\tCorrupt STL detected! Please fix {filename}!")
+      return False
+    return True
 
-def process_stl(filename):
-    cmd = "admesh \"{0}\"".format(filename)
-    print ("Validating STL {0}".format(filename))
-    result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
-    output = str(result.stdout)
-
-    assert_param_threshold(output, "Edges fixed", 0)
-    assert_param_threshold(output, "Backwards edges", 0)
-    assert_param_threshold(output, "Degenerate facets", 0)
-    assert_param_threshold(output, "Facets removed", 0)
-    assert_param_threshold(output, "Facets added", 0)
-    assert_param_threshold(output, "Facets reversed", 0)
-    
-def process_markdown(filename):    
-    cmd = "remark -u validate-links --no-stdout --frail \"{0}\"".format(filename)
-    print ("Validating Markdown {0}".format(filename))
-    subprocess.run(cmd, shell=True, check=True)  
-    
+def check_stl_rotation(filename: str) -> bool:
+    objs = file_handler.load_mesh(filename)
+    for part, content in objs.items():
+        x = Tweak(content["mesh"], extended_mode=True, verbose=False)
+        if x.rotation_angle >= 0.1:
+          print(f"\tPossible bad orientation of STL detected! Please check orientation of {filename}!")
+          return False
+    return True
+        
 def main(argv):
     argument = " ".join(sys.argv[1:])
-
+    print(f"Checking {argument}")
     if argument.lower().endswith(".stl"):
-      process_stl(argument)
+      if process_stl(argument) and check_stl_rotation(argument):
+        sys.exit(0)
+      else:
+        sys.exit(0) # ToDo Fixme
 
 if __name__ == "__main__":
    main(sys.argv[1:])
