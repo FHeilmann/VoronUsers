@@ -24,7 +24,7 @@ jobs:
           files: ${{steps.changed-files.outputs.changed_files}}
           folders: ".workflow_files"
           patterns: ""
-          path: ${{github.worskpace}}
+          path: ${{github.workspace}}
       - name: Install admesh (cached) 🛠️
         uses: awalsh128/cache-apt-pkgs-action@v1.3.0
         with:
