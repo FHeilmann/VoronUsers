@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Get changed files and check whitespace 🔍
         id: changed-files
-        uses: FHeilmann/pr-changed-files-check-whitespace@v1
+        uses: FHeilmann/pr-changed-files-check-whitespace@main
       - name: List all changed files 📃
         run: |
           for file in ${{ steps.changed-files.outputs.changed_files }}; do
