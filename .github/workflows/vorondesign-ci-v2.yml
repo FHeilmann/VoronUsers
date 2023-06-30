@@ -193,7 +193,7 @@ jobs:
           key: cache-${{github.sha}}
       - name: Preview README.md
         id: preview-readme
-        uses: FHeilmann/voronusers-generate-readme@v2
+        uses: FHeilmann/voronusers-generate-readme@main
         with:
           target_directory: ${{github.workspace}}/printer_mods
           preview: true
