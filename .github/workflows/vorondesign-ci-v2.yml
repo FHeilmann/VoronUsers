@@ -197,9 +197,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Preview README.md
-        working-directory: ${{github.workspace}}
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@v2
+        working-directory: ${{github.workspace}}
         with:
           printer_mods_subdir: "./printer_mods"
           preview: true
