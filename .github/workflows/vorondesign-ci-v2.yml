@@ -175,7 +175,7 @@ jobs:
         run: |
           for file in $(echo $(find ${{ github.workspace }} -type f -iname '.metadata.yml') | tr '\n' ' '); do
             echo "Checking metadata file $file.."
-            pykwalify -d $file -s ${{ github.workspace }}/.github/workflows/yaml_schema.scm
+            pykwalify -d $file -s ${{ github.workspace }}/.github/workflows/yaml_schema.json
           done
   preview_readme:
     name: Preview readme file
