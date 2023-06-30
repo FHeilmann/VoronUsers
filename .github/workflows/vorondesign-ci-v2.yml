@@ -14,12 +14,10 @@ jobs:
         uses: FHeilmann/pr-changed-files-check-whitespace@main
       - name: List all changed files 📃
         run: |
-          echo "::group::changed-files"
-          echo "## The following changed files were detected:" >> $GITHUB_STEP_SUMMARY
+          echo "### The following changes were detected:" >> $GITHUB_STEP_SUMMARY
           for file in ${{ steps.changed-files.outputs.changed_files }}; do
             echo "- $file" >> $GITHUB_STEP_SUMMARY
           done
-          echo "::endgroup::"
       - name: Perform Sparse Checkout 🛒
         id: sparse-checkout
         uses: FHeilmann/sparse-checkout@main
@@ -55,7 +53,7 @@ jobs:
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages (cached) 🛠️
         run: |
-          pip install pykwalify admesh git+https://github.com/ChristophSchranz/Tweaker-3.git
+          pip install pykwalify admesh pyyaml git+https://github.com/ChristophSchranz/Tweaker-3.git
   check_stls:
     name: Validate STLs
     runs-on: ubuntu-latest
@@ -92,7 +90,6 @@ jobs:
       - name: Check for STL corruption ✅
         id: check-stls
         run: |
-          echo "::group::check-stls"
           chmod +x ${{ github.workspace }}/.github/workflows/validate_stl.py
           for file in $(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' '); do
             python3 ${{ github.workspace }}/.github/workflows/validate_stl.py $file || touch failed
@@ -101,7 +98,6 @@ jobs:
             echo "Error occurred while validating STLs."
             exit 255
           fi
-          echo "::endgroup::"
   check_stl_rotation:
     name: Check STL rotation
     runs-on: ubuntu-latest
@@ -133,7 +129,6 @@ jobs:
       - name: Check STL Rotation 🔄
         id: check-stls
         run: |
-          echo "::group::check-stls"
           chmod +x ${{ github.workspace }}/.github/workflows/check_stl_rotation.py
           for file in $(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' '); do
             python3 ${{ github.workspace }}/.github/workflows/check_stl_rotation.py $file || touch failed
@@ -142,7 +137,6 @@ jobs:
             echo "Error occurred while validating STLs."
             exit 255
           fi
-          echo "::endgroup::"
   validate_metadata:
     name: Validate metadata files
     runs-on: ubuntu-latest
@@ -174,12 +168,10 @@ jobs:
       - name: Check Metadata files ✅
         id: check-metadata
         run: |
-          echo "::group::check-metadata"
           for file in $(echo $(find ${{ github.workspace }} -type f -iname '.metadata.yml') | tr '\n' ' '); do
             echo "Checking metadata file $file.."
             pykwalify -d $file -s ${{ github.workspace }}/.github/workflows/yaml_schema.yml
           done
-          echo "::endgroup::"
   preview_readme:
     name: Preview readme file
     runs-on: ubuntu-latest
@@ -191,6 +183,14 @@ jobs:
         with:
           path: ${{github.workspace}}
           key: cache-${{github.sha}}
+      - name: Get python package cache 🧰
+        uses: actions/cache/restore@v3
+        id: cache-python
+        env:
+          cache-name: cache-python
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Preview README.md
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@main
