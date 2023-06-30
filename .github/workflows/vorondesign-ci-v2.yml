@@ -177,6 +177,6 @@ jobs:
           echo "::group::check-metadata"
           for file in $(echo $(find ${{ github.workspace }} -type f -iname '.metadata.yml') | tr '\n' ' '); do
             echo "Checking metadata file $file.."
-            pykwalify -d $file -s ${{ github.workspace }}/.workflow_files/yaml_schema.yml
+            pykwalify -d $file -s ${{ github.workspace }}/.github/workflows/yaml_schema.yml
           done
           echo "::endgroup::"
