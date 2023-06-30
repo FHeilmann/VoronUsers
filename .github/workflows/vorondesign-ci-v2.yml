@@ -27,6 +27,7 @@ jobs:
           folders: ".workflow_files"
           patterns: ""
           path: ${{github.workspace}}
+          branch: ${{github.ref}}
       - name: Install apt packages (cached) 🛠️
         uses: awalsh128/cache-apt-pkgs-action@v1.3.0
         with:
@@ -77,4 +78,3 @@ jobs:
             pykwalify -d $file -s ${{ github.workspace }}/.workflow_files/yaml_schema.yml
           done
           echo "::endgroup::"
-        
