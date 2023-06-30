@@ -199,7 +199,7 @@ jobs:
       - name: Preview README.md
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@v2
-        working-directory: ${{github.workspace}}
         with:
+          working-directory: ${{github.workspace}}
           printer_mods_subdir: "./printer_mods"
           preview: true
