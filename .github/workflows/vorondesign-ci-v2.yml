@@ -15,8 +15,9 @@ jobs:
       - name: List all changed files 📃
         run: |
           echo "::group::changed-files"
+          echo "## The following changed files were detected:" >> $GITHUB_STEP_SUMMARY
           for file in ${{ steps.changed-files.outputs.changed_files }}; do
-            echo "Changed file: $file"
+            echo "- $file" >> $GITHUB_STEP_SUMMARY
           done
           echo "::endgroup::"
       - name: Perform Sparse Checkout 🛒
