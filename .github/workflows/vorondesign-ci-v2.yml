@@ -32,9 +32,9 @@ jobs:
       - name: Cache checked out files 🧰
         id: build-repo-cache
         uses: actions/cache@v3
-          with:
-            path: ${{github.workspace}}
-            key: cache-${{github.sha}}
+        with:
+          path: ${{github.workspace}}
+          key: cache-${{github.sha}}
   setup_python:
     name: Prepare python environment
     steps:
