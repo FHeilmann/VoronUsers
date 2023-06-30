@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, synchronize]
 jobs:
   checkout_check_whitespace:
-    name: Check out PR and check whitespace
+    name: Checkout & Check whitespace
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -37,6 +37,7 @@ jobs:
           key: cache-${{github.sha}}
   setup_python:
     name: Prepare python environment
+    runs-on: ubuntu-latest
     steps:
       - name: Setup python 3.11 🐍
         id: python311
