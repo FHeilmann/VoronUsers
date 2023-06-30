@@ -180,3 +180,32 @@ jobs:
             pykwalify -d $file -s ${{ github.workspace }}/.github/workflows/yaml_schema.yml
           done
           echo "::endgroup::"
+  preview_readme:
+    name: Preview readme file
+    runs-on: ubuntu-latest
+    needs: [validate_metadata, setup_python]
+    steps:
+      - name: Get repository files 🧰
+        uses: actions/cache/restore@v3
+        id: get-repo-cache
+        with:
+          path: ${{github.workspace}}
+          key: cache-${{github.sha}}
+      - name: Setup python 3.11 🐍
+        id: python311
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Get python package cache 🧰
+        uses: actions/cache@v3
+        id: cache-python
+        env:
+          cache-name: cache-python
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+      - name: Preview README.md
+        id: preview-readme
+        uses: FHeilmann/voronusers-generate-readme@v1
+        env:
+          PREVIEW: true
