@@ -183,7 +183,8 @@ jobs:
   preview_readme:
     name: Preview readme file
     runs-on: ubuntu-latest
-    needs: [validate_metadata, setup_python]
+    working-directory: ${{github.workspace}}
+    needs: [validate_metadata]
     steps:
       - name: Get repository files 🧰
         uses: actions/cache/restore@v3
@@ -199,7 +200,6 @@ jobs:
       - name: Preview README.md
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@v2
-        working-directory: ${{github.workspace}}
         with:
           printer_mods_subdir: "./printer_mods"
           preview: true
