@@ -50,6 +50,11 @@ jobs:
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ runner.os }}-build-${{ env.cache-name }}
+      - name: Install apt packages (cached) 🛠️
+        uses: awalsh128/cache-apt-pkgs-action@v1.3.0
+        with:
+          packages: admesh, libadmesh-dev
+          version: 1.0
       - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
         name: Install Python packages (cached) 🛠️
         run: |
