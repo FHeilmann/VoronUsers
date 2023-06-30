@@ -191,15 +191,9 @@ jobs:
         with:
           path: ${{github.workspace}}
           key: cache-${{github.sha}}
-      - name: Setup python 3.11 🐍
-        id: python311
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
       - name: Preview README.md
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@v2
         with:
-          working-directory: ${{github.workspace}}
-          printer_mods_subdir: "./printer_mods"
+          target_directory: ${{github.workspace}}/printer_mods
           preview: true
