@@ -196,16 +196,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - name: Get python package cache 🧰
-        uses: actions/cache@v3
-        id: cache-python
-        env:
-          cache-name: cache-python
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Preview README.md
         id: preview-readme
-        uses: FHeilmann/voronusers-generate-readme@v1
-        env:
-          PREVIEW: true
+        uses: FHeilmann/voronusers-generate-readme@v2
+        working-directory: ${{github.workspace}}
+        with:
+          printer_mods_subdir: "./printer_mods"
+          preview: true
