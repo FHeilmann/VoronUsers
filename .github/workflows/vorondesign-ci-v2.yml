@@ -183,7 +183,6 @@ jobs:
   preview_readme:
     name: Preview readme file
     runs-on: ubuntu-latest
-    working-directory: ${{github.workspace}}
     needs: [validate_metadata]
     steps:
       - name: Get repository files 🧰
@@ -198,6 +197,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Preview README.md
+        working-directory: ${{github.workspace}}
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@v2
         with:
