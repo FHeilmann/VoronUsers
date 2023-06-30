@@ -188,14 +188,6 @@ jobs:
         with:
           path: ${{github.workspace}}
           key: cache-${{github.sha}}
-      - name: Get python package cache 🧰
-        uses: actions/cache/restore@v3
-        id: cache-python
-        env:
-          cache-name: cache-python
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
       - name: Preview README.md
         id: preview-readme
         uses: FHeilmann/voronusers-generate-readme@main
