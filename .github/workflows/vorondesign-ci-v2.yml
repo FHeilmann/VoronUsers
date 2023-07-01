@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, synchronize]
 jobs:
   checkout_check_whitespace:
-    name: Checkout & Check whitespace
+    name: Checkout & Check Whitespace
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -121,7 +121,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Get python package cache 🧰
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         id: cache-python
         env:
           cache-name: cache-python
@@ -160,7 +160,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Get python package cache 🧰
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         id: cache-python
         env:
           cache-name: cache-python
@@ -179,7 +179,7 @@ jobs:
             pykwalify -d $file -s ${{ github.workspace }}/.github/workflows/yaml_schema.json
           done
   preview_readme:
-    name: Preview readme file
+    name: Preview README
     runs-on: ubuntu-latest
     needs: [validate_metadata]
     steps:
@@ -195,3 +195,4 @@ jobs:
         with:
           target_directory: ${{github.workspace}}/printer_mods
           preview: true
+          python_cache_key: ${{ runner.os }}-build-cache-python
