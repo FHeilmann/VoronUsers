@@ -3,6 +3,10 @@ run-name: "#${{github.event.number}} - ${{github.event.pull_request.title}}"
 on:
   pull_request:
     types: [opened, reopened, synchronize]
+env:
+  PR_FILES_CACHE_KEY: cache-${{github.sha}}
+  PYTHON_CACHE_KEY: voronusers-python-cache
+
 jobs:
   checkout_check_whitespace:
     permissions:
@@ -11,35 +15,35 @@ jobs:
     uses: VoronDesign/.github/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
     with:
       branch: ${{ github.ref }}
-      cache-key: cache-${{github.sha}}
+      cache-key: ${{env.PR_FILES_CACHE_KEY}}
   setup_python:
     name: Prepare python environment
     uses: VoronDesign/.github/.github/workflows/prepare-environment.yml@main
     with:
       apt-packages: "admesh, libadmesh-dev"
       pip-packages: "pip install pykwalify admesh pyyaml git+https://github.com/ChristophSchranz/Tweaker-3.git"
-      python-cache-key: voronusers-python-cache
+      python-cache-key: ${{env.PYTHON_CACHE_KEY}}
   check_stls:
     name: Check STL corruption
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-corruption.yml@main
     with:
-      cache-key: cache-${{github.sha}}
-      python-cache-key: voronusers-python-cache
+      cache-key: ${{env.PR_FILES_CACHE_KEY}}
+      python-cache-key: ${{env.PYTHON_CACHE_KEY}}
   check_stl_rotation:
     name: Check STL rotation
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-rotation.yml@main
     with:
-      cache-key: cache-${{github.sha}}
-      python-cache-key: voronusers-python-cache
+      cache-key: ${{env.PR_FILES_CACHE_KEY}}
+      python-cache-key: ${{env.PYTHON_CACHE_KEY}}
   validate_metadata:
     name: Check metadata files
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/validate-metadata-files.yml@main
     with:
-      cache-key: cache-${{github.sha}}
-      python-cache-key: voronusers-python-cache
+      cache-key: ${{env.PR_FILES_CACHE_KEY}}
+      python-cache-key: ${{env.PYTHON_CACHE_KEY}}
   preview_readme:
     name: Preview README
     needs: [validate_metadata]
@@ -47,5 +51,5 @@ jobs:
     with:
       subdirectory: printer_mods
       preview: true
-      cache-key: cache-${{github.sha}}
-      python-cache-key: voronusers-python-cache
+      cache-key: ${{env.PR_FILES_CACHE_KEY}}
+      python-cache-key: ${{env.PYTHON_CACHE_KEY}}
