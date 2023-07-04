@@ -33,6 +33,7 @@ jobs:
       cache-key: cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
   validate_metadata:
+    needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/validate-metadata-files.yml@main
     with:
       cache-key: cache-${{github.sha}}
