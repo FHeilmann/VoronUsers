@@ -5,35 +5,38 @@ on:
     types: [opened, reopened, synchronize]
 jobs:
   checkout_check_whitespace:
-    name: Checkout & Check Whitespace
-    runs-on: ubuntu-latest
     permissions:
       pull-requests: read
-    steps:
-      - name: Get changed files and check whitespace 🔍
-        id: changed-files
-        uses: FHeilmann/pr-changed-files-check-whitespace@main
-      - name: List all changed files 📃
-        run: |
-          echo "### The following changes were detected:" >> $GITHUB_STEP_SUMMARY
-          for file in ${{ steps.changed-files.outputs.changed_files }}; do
-            echo "- $file" >> $GITHUB_STEP_SUMMARY
-          done
-      - name: Perform Sparse Checkout 🛒
-        id: sparse-checkout
-        uses: FHeilmann/sparse-checkout@main
-        with:
-          files: ${{steps.changed-files.outputs.changed_files}}
-          folders: ".github/workflows"
-          patterns: ""
-          path: ${{github.workspace}}
-          branch: ${{github.ref}}
-      - name: Cache checked out files 🧰
-        id: build-repo-cache
-        uses: actions/cache@v3
-        with:
-          path: ${{github.workspace}}
-          key: cache-${{github.sha}}
+    name: Checkout & Check Whitespace
+    uses: VoronDesign/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
+    with:
+      branch: ${{ github.ref }}
+      cache-key: cache-${{github.sha}}
+    # steps:
+    #   - name: Get changed files and check whitespace 🔍
+    #     id: changed-files
+    #     uses: FHeilmann/pr-changed-files-check-whitespace@main
+    #   - name: List all changed files 📃
+    #     run: |
+    #       echo "### The following changes were detected:" >> $GITHUB_STEP_SUMMARY
+    #       for file in ${{ steps.changed-files.outputs.changed_files }}; do
+    #         echo "- $file" >> $GITHUB_STEP_SUMMARY
+    #       done
+    #   - name: Perform Sparse Checkout 🛒
+    #     id: sparse-checkout
+    #     uses: FHeilmann/sparse-checkout@main
+    #     with:
+    #       files: ${{steps.changed-files.outputs.changed_files}}
+    #       folders: ".github/workflows"
+    #       patterns: ""
+    #       path: ${{github.workspace}}
+    #       branch: ${{github.ref}}
+    #   - name: Cache checked out files 🧰
+    #     id: build-repo-cache
+    #     uses: actions/cache@v3
+    #     with:
+    #       path: ${{github.workspace}}
+    #       key: cache-${{github.sha}}
   setup_python:
     name: Prepare python environment
     runs-on: ubuntu-latest
