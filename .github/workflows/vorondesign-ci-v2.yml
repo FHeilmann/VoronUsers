@@ -49,18 +49,3 @@ jobs:
       preview: true
       cache-key: cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
-
-
-    steps:
-      - name: Get repository files 🧰
-        uses: actions/cache/restore@v3
-        id: get-repo-cache
-        with:
-          path: ${{github.workspace}}
-          key: cache-${{github.sha}}
-      - name: Preview README.md
-        id: preview-readme
-        uses: FHeilmann/voronusers-generate-readme@main
-        with:
-          target_directory: ${{github.workspace}}/printer_mods
-          preview: true
