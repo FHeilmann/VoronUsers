@@ -8,7 +8,7 @@ jobs:
     permissions:
       pull-requests: read
     name: Checkout & Check Whitespace
-    uses: VoronDesign/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
+    uses: VoronDesign/.github/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
     with:
       branch: ${{ github.ref }}
       cache-key: cache-${{github.sha}}
