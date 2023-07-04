@@ -12,101 +12,61 @@ jobs:
     with:
       branch: ${{ github.ref }}
       cache-key: cache-${{github.sha}}
+  setup_python:
+    name: Prepare python environment
+    uses: VoronDesign/.github/.github/workflows/prepare-environment.yml@main
+    with:
+      apt-packages: "admesh, libadmesh-dev"
+      pip-packages: "pip install pykwalify admesh pyyaml git+https://github.com/ChristophSchranz/Tweaker-3.git"
+      python-cache-key: voronusers-python-cache
+  check_stls:
+    name: Validate STLs
+    needs: [checkout_check_whitespace, setup_python]
+    uses: VoronDesign/.github/.github/workflows/check-stl-corruption.yml@main
+    with:
+      cache-key: cache-${{github.sha}}
+      python-cache-key: voronusers-python-cache
+
     # steps:
-    #   - name: Get changed files and check whitespace 🔍
-    #     id: changed-files
-    #     uses: FHeilmann/pr-changed-files-check-whitespace@main
-    #   - name: List all changed files 📃
-    #     run: |
-    #       echo "### The following changes were detected:" >> $GITHUB_STEP_SUMMARY
-    #       for file in ${{ steps.changed-files.outputs.changed_files }}; do
-    #         echo "- $file" >> $GITHUB_STEP_SUMMARY
-    #       done
-    #   - name: Perform Sparse Checkout 🛒
-    #     id: sparse-checkout
-    #     uses: FHeilmann/sparse-checkout@main
-    #     with:
-    #       files: ${{steps.changed-files.outputs.changed_files}}
-    #       folders: ".github/workflows"
-    #       patterns: ""
-    #       path: ${{github.workspace}}
-    #       branch: ${{github.ref}}
-    #   - name: Cache checked out files 🧰
-    #     id: build-repo-cache
-    #     uses: actions/cache@v3
+    #   - name: Get repository files 🧰
+    #     uses: actions/cache/restore@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+    #     id: get-repo-cache
     #     with:
     #       path: ${{github.workspace}}
     #       key: cache-${{github.sha}}
-  setup_python:
-    name: Prepare python environment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup python 3.11 🐍
-        id: python311
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Get python package cache 🧰
-        uses: actions/cache@v3
-        id: cache-python
-        env:
-          cache-name: cache-python
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-      - name: Install apt packages (cached) 🛠️
-        uses: awalsh128/cache-apt-pkgs-action@v1.3.0
-        with:
-          packages: admesh, libadmesh-dev
-          version: 1.0
-      - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
-        name: Install Python packages (cached) 🛠️
-        run: |
-          pip install pykwalify admesh pyyaml git+https://github.com/ChristophSchranz/Tweaker-3.git
-  check_stls:
-    name: Validate STLs
-    runs-on: ubuntu-latest
-    needs: [checkout_check_whitespace, setup_python]
-    steps:
-      - name: Get repository files 🧰
-        uses: actions/cache/restore@v3
-        id: get-repo-cache
-        with:
-          path: ${{github.workspace}}
-          key: cache-${{github.sha}}
-      - name: Setup python 3.11 🐍
-        id: python311
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Get python package cache 🧰
-        uses: actions/cache/restore@v3
-        id: cache-python
-        env:
-          cache-name: cache-python
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-      - name: Install apt packages (cached) 🛠️
-        uses: awalsh128/cache-apt-pkgs-action@v1.3.0
-        with:
-          packages: admesh, libadmesh-dev
-          version: 1.0
-      - name: Show tool versions 🏃
-        id: run-tools
-        run: |
-          admesh --version
-      - name: Check for STL corruption ✅
-        id: check-stls
-        run: |
-          chmod +x ${{ github.workspace }}/.github/workflows/validate_stl.py
-          for file in $(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' '); do
-            python3 ${{ github.workspace }}/.github/workflows/validate_stl.py $file || touch failed
-          done
-          if [ -f "failed" ]; then
-            echo "Error occurred while validating STLs."
-            exit 255
-          fi
+    #   - name: Setup python 3.11 🐍
+    #     id: python311
+    #     uses: actions/setup-python@v4
+    #     with:
+    #       python-version: '3.11'
+    #   - name: Get python package cache 🧰
+    #     uses: actions/cache/restore@v3
+    #     id: cache-python
+    #     env:
+    #       cache-name: cache-python
+    #     with:
+    #       path: ${{ env.pythonLocation }}
+    #       key: ${{ runner.os }}-build-${{ env.cache-name }}
+    #   - name: Install apt packages (cached) 🛠️
+    #     uses: awalsh128/cache-apt-pkgs-action@v1.3.0
+    #     with:
+    #       packages: admesh, libadmesh-dev
+    #       version: 1.0
+    #   - name: Show tool versions 🏃
+    #     id: run-tools
+    #     run: |
+    #       admesh --version
+    #   - name: Check for STL corruption ✅
+    #     id: check-stls
+    #     run: |
+    #       chmod +x ${{ github.workspace }}/.github/workflows/validate_stl.py
+    #       for file in $(echo $(find ${{ github.workspace }} -type f -iname '*.STL') | tr '\n' ' '); do
+    #         python3 ${{ github.workspace }}/.github/workflows/validate_stl.py $file || touch failed
+    #       done
+    #       if [ -f "failed" ]; then
+    #         echo "Error occurred while validating STLs."
+    #         exit 255
+    #       fi
   check_stl_rotation:
     name: Check STL rotation
     runs-on: ubuntu-latest
