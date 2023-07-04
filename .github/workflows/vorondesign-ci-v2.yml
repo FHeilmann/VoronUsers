@@ -20,19 +20,21 @@ jobs:
       pip-packages: "pip install pykwalify admesh pyyaml git+https://github.com/ChristophSchranz/Tweaker-3.git"
       python-cache-key: voronusers-python-cache
   check_stls:
-    name: Validate STLs
+    name: Check STL corruption
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-corruption.yml@main
     with:
       cache-key: cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
   check_stl_rotation:
+    name: Check STL rotation
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-rotation.yml@main
     with:
       cache-key: cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
   validate_metadata:
+    name: Check metadata files
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/validate-metadata-files.yml@main
     with:
@@ -40,8 +42,15 @@ jobs:
       python-cache-key: voronusers-python-cache
   preview_readme:
     name: Preview README
-    runs-on: ubuntu-latest
     needs: [validate_metadata]
+    uses: VoronDesign/.github/.github/workflows/generate-readme.yml@main
+    with:
+      subdirectory: printer_mods
+      preview: true
+      cache-key: cache-${{github.sha}}
+      python-cache-key: voronusers-python-cache
+
+
     steps:
       - name: Get repository files 🧰
         uses: actions/cache/restore@v3
@@ -55,4 +64,3 @@ jobs:
         with:
           target_directory: ${{github.workspace}}/printer_mods
           preview: true
-          python_cache_key: ${{ runner.os }}-build-cache-python
