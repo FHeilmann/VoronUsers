@@ -18,7 +18,7 @@ jobs:
     uses: VoronDesign/.github/.github/workflows/prepare-environment.yml@main
     with:
       apt-packages: "admesh, libadmesh-dev"
-      pip-packages: "pip install pykwalify admesh pyyaml git+https://github.com/ChristophSchranz/Tweaker-3.git"
+      pip-packages: "pykwalify admesh pyyaml imagekitio git+https://github.com/ChristophSchranz/Tweaker-3.git"
       python-cache-key: voronusers-python-cache
   check_stls:
     name: Check STL corruption
@@ -31,6 +31,7 @@ jobs:
     name: Check STL rotation
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-rotation.yml@main
+    secrets: inherit
     with:
       cache-key: cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
