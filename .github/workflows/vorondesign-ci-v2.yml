@@ -31,7 +31,11 @@ jobs:
     name: Check STL rotation
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-rotation.yml@main
-    secrets: inherit
+    secrets:
+    # ToDo: Change to secrets: inherit once it's in the VoronDesign org
+      IMAGEKIT_PRIVATE_KEY: ${{ secrets.IMAGEKIT_PRIVATE_KEY }}
+      IMAGEKIT_PUBLIC_KEY: ${{ secrets.IMAGEKIT_PUBLIC_KEY }}
+      IMAGEKIT_URL_ENDPOINT: ${{ secrets.IMAGEKIT_URL_ENDPOINT }}
     with:
       cache-key: file-cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
