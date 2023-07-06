@@ -1,4 +1,4 @@
-name: VoronUsers CI v2
+name: VoronUsers PR CI
 run-name: "#${{github.event.number}} - ${{github.event.pull_request.title}}"
 on:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
     uses: VoronDesign/.github/.github/workflows/prepare-environment.yml@main
     with:
       apt-packages: "admesh, libadmesh-dev"
-      pip-packages: "pykwalify admesh pyyaml imagekitio git+https://github.com/ChristophSchranz/Tweaker-3.git"
+      pip-packages: "admesh pyyaml imagekitio git+https://github.com/ChristophSchranz/Tweaker-3.git"
       python-cache-key: voronusers-python-cache
   check_stls:
     name: Check STL corruption
