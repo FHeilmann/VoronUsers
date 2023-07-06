@@ -12,7 +12,7 @@ jobs:
     uses: VoronDesign/.github/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
     with:
       branch: ${{ github.ref }}
-      cache-key: cache-${{github.sha}}
+      cache-key: file-cache-${{github.sha}}
   setup_python:
     name: Prepare python environment
     uses: VoronDesign/.github/.github/workflows/prepare-environment.yml@main
@@ -25,7 +25,7 @@ jobs:
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/check-stl-corruption.yml@main
     with:
-      cache-key: cache-${{github.sha}}
+      cache-key: file-cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
   check_stl_rotation:
     name: Check STL rotation
@@ -33,14 +33,14 @@ jobs:
     uses: VoronDesign/.github/.github/workflows/check-stl-rotation.yml@main
     secrets: inherit
     with:
-      cache-key: cache-${{github.sha}}
+      cache-key: file-cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
   validate_metadata:
     name: Check metadata files
     needs: [checkout_check_whitespace, setup_python]
     uses: VoronDesign/.github/.github/workflows/validate-metadata-files.yml@main
     with:
-      cache-key: cache-${{github.sha}}
+      cache-key: file-cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
   preview_readme:
     name: Preview README
@@ -49,5 +49,5 @@ jobs:
     with:
       subdirectory: printer_mods
       preview: true
-      cache-key: cache-${{github.sha}}
+      cache-key: file-cache-${{github.sha}}
       python-cache-key: voronusers-python-cache
