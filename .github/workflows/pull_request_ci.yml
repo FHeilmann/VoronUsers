@@ -51,12 +51,11 @@ jobs:
       cache-directory: pr-files
       python-cache-key: voronusers-python-cache
   preview_readme:
-    name: Preview README
+    name: Preview README.md
     needs: [validate_metadata]
-    uses: VoronDesign/.github/.github/workflows/generate-readme.yml@main
+    uses: VoronDesign/.github/.github/workflows/preview-readme.yml@main
     with:
       subdirectory: printer_mods
-      preview: true
       cache-key: file-cache-${{github.sha}}
       cache-directory: pr-files
       python-cache-key: voronusers-python-cache
