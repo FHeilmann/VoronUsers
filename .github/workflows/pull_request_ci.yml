@@ -13,7 +13,7 @@ jobs:
     with:
       branch: ${{ github.ref }}
       cache-key: file-cache-${{github.sha}}
-      cache-directory: ${{ github.workspace }}/pr-files
+      cache-directory: ${GITHUB_WORKSPACE}/pr-files
   setup_python:
     name: Prepare python environment
     uses: VoronDesign/.github/.github/workflows/prepare-environment.yml@main
