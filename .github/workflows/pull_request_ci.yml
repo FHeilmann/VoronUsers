@@ -48,7 +48,7 @@ jobs:
       python-cache-key: voronusers-python-cache
   validate_metadata:
     name: Check metadata files
-    needs: [checkout_check_whitespace, setup_python]
+    needs: [checkout_check_whitespace]
     if: ${{ needs.checkout_check_whitespace.outputs.yaml == 'true' }}
     uses: VoronDesign/.github/.github/workflows/validate-metadata-files.yml@v1
     with:
