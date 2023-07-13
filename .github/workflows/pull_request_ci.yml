@@ -10,8 +10,6 @@ permissions:
   pull-requests: write
 jobs:
   checkout_check_whitespace:
-    permissions:
-      pull-requests: read
     name: Checkout & Check Whitespace
     uses: VoronDesign/.github/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
     with:
