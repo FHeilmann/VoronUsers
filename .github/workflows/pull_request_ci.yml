@@ -72,7 +72,7 @@ jobs:
     if: ${{ always() }}
     uses: VoronDesign/.github/.github/workflows/generate-pr-comment.yml@main
     with:
-      repostitory: ${{ github.repository }}
+      repository: ${{ github.repository }}
       action_run_id: ${{ github.run_id }}
 
   # check_files:
