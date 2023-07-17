@@ -70,7 +70,9 @@ jobs:
     # information that the dispatched workflow can't deduce on its own via the client payload parameter
     needs: [checkout_check_whitespace, check_stls, check_stl_rotation, validate_metadata, preview_readme]
     if: ${{ always() }}
-    uses: peter-evans/repository-dispatch@v2
-    with:
-      event-type: create_pr_comment
-      client-payload: '{"pr_number": "${{ github.event.number }}", "action_run_id": "${{github.run_id}}"}'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: create_pr_comment
+          client-payload: '{"pr_number": "${{ github.event.number }}", "action_run_id": "${{github.run_id}}"}'
