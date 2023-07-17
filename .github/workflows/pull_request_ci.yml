@@ -64,15 +64,20 @@ jobs:
       subdirectory: printer_mods
       cache-key: file-cache-${{github.sha}}
       cache-directory: pr-files
-  create_pr_comment:
-    name: Dispatch Comment Creation
+  prime_pr_comment:
+    name: Prime Comment Creation
     # Dispatching allows us to run in the context of our repo, with sufficient credentials to do PR comments/set labels. We pass the
     # information that the dispatched workflow can't deduce on its own via the client payload parameter
     needs: [checkout_check_whitespace, check_stls, check_stl_rotation, validate_metadata, preview_readme]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - uses: peter-evans/repository-dispatch@v2
+      - name: Save PR number
+        run: |
+          mkdir -p ${{ runner.temp }}/pr
+          echo ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
+          echo ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
+      - uses: actions/upload-artifact@v2
         with:
-          event-type: create_pr_comment
-          client-payload: '{"pr_number": "${{ github.event.number }}", "action_run_id": "${{github.run_id}}"}'
+          name: pr
+          path: ${{ runner.temp }}/pr
