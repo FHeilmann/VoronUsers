@@ -75,9 +75,9 @@ jobs:
       - name: Save PR number
         run: |
           mkdir -p ${{ runner.temp }}/pr
-          echo ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
-          echo ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
-      - uses: actions/upload-artifact@v2
+          echo -n ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
+          echo -n ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
+      - uses: actions/upload-artifact@v3
         with:
           name: pr
           path: ${{ runner.temp }}/pr
