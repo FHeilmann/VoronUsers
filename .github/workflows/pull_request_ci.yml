@@ -39,10 +39,6 @@ jobs:
     needs: [setup_python]
     if: ${{ needs.checkout_check_whitespace.outputs.stl == 'true' }}
     uses: VoronDesign/.github/.github/workflows/check-stl-rotation.yml@main
-    secrets:
-    # ToDo: Change to secrets: inherit once it's in the VoronDesign org
-      IMAGEKIT_PRIVATE_KEY: ${{ secrets.IMAGEKIT_PRIVATE_KEY }}
-      IMAGEKIT_PUBLIC_KEY: ${{ secrets.IMAGEKIT_PUBLIC_KEY }}
     with:
       imagekit-url-endpoint: https://ik.imagekit.io/vorondesign
       cache-key: file-cache-${{github.sha}}
@@ -77,6 +73,7 @@ jobs:
           mkdir -p ${{ runner.temp }}/pr
           echo -n ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
           echo -n ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
+          echo -n ${{ job.check_stl_rotation.outputs.rotation_suggested }} > ${{ runner.temp }}/pr/rotation_suggested
       - uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05
         with:
           name: pr
