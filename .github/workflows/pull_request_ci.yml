@@ -44,7 +44,6 @@ jobs:
       python-cache-key: voronusers-python-cache
       parent-job-name: check_stl_rotation
   check_metadata:
-    name: Check metadata files
     needs: [check_whitespace]
     if: ${{ needs.checkout_check_whitespace.outputs.yaml == 'true' }}
     uses: VoronDesign/.github/.github/workflows/check-metadata-files.yml@main
@@ -53,7 +52,6 @@ jobs:
       cache-directory: pr-files
       parent-job-name: check_metadata
   preview_readme:
-    name: Preview README.md
     needs: [check_metadata]
     uses: VoronDesign/.github/.github/workflows/preview-readme.yml@main
     with:
@@ -61,7 +59,6 @@ jobs:
       cache-key: file-cache-${{github.sha}}
       cache-directory: pr-files
   prepare_pr_comment:
-    name: Store PR comment parameters
     # Dispatching allows us to run in the context of our repo, with sufficient credentials to do PR comments/set labels. We pass the
     # information that the dispatched workflow can't deduce on its own via the client payload parameter
     needs: [check_whitespace, check_stl_corruption, check_stl_rotation, check_metadata, preview_readme]
@@ -71,6 +68,7 @@ jobs:
       - name: Save PR number
         run: |
           mkdir -p ${{ runner.temp }}/pr
+          echo "Ready for review" > ${{ runner.temp }}/pr/ready_label
           echo ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
           echo ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
           mkdir -p ${{ runner.temp }}/pr/check_stl_corruption
