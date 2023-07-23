@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 jobs:
   check_whitespace:
-    uses: VoronDesign/.github/.github/workflows/check-whitespace-cache.yml.yml@main
+    uses: VoronDesign/.github/.github/workflows/check-whitespace-cache.yml@main
     with:
       branch: ${{ github.ref }}
       cache-key: file-cache-${{github.sha}}
