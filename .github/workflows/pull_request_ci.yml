@@ -45,7 +45,7 @@ jobs:
       parent-job-name: check_stl_rotation
   check_metadata:
     needs: [check_whitespace]
-    if: ${{ needs.checkout_check_whitespace.outputs.yaml == 'true' }}
+    if: ${{ needs.check_whitespace.outputs.yaml == 'true' }}
     uses: VoronDesign/.github/.github/workflows/check-metadata-files.yml@main
     with:
       cache-key: file-cache-${{github.sha}}
@@ -58,6 +58,7 @@ jobs:
       subdirectory: printer_mods
       cache-key: file-cache-${{github.sha}}
       cache-directory: pr-files
+      parent-job-name: preview_readme
   prepare_pr_comment:
     # Dispatching allows us to run in the context of our repo, with sufficient credentials to do PR comments/set labels. We pass the
     # information that the dispatched workflow can't deduce on its own via the client payload parameter
@@ -87,6 +88,10 @@ jobs:
           echo ${{ needs.check_metadata.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_metadata/result
           echo ${{ needs.check_metadata.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_metadata/job_id
           echo "CR: Metadata Files" > ${{ runner.temp }}/pr/check_metadata/error_label
+          mkdir -p ${{ runner.temp }}/pr/preview_readme
+          echo ${{ needs.preview_readme.outputs.extended-outcome }} > ${{ runner.temp }}/pr/preview_readme/result
+          echo ${{ needs.preview_readme.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/preview_readme/job_id
+          echo "CR: Readme Preview" > ${{ runner.temp }}/pr/preview_readme/error_label
       - uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05
         with:
           name: pr
