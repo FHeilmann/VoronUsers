@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 jobs:
   check_whitespace:
-    uses: VoronDesign/.github/.github/workflows/pr_checkout_check_whitespace_cache.yml@main
+    uses: VoronDesign/.github/.github/workflows/check-whitespace-cache.yml.yml@main
     with:
       branch: ${{ github.ref }}
       cache-key: file-cache-${{github.sha}}
@@ -47,7 +47,7 @@ jobs:
     name: Check metadata files
     needs: [check_whitespace]
     if: ${{ needs.checkout_check_whitespace.outputs.yaml == 'true' }}
-    uses: VoronDesign/.github/.github/workflows/validate-metadata-files.yml@main
+    uses: VoronDesign/.github/.github/workflows/check-metadata-files.yml@main
     with:
       cache-key: file-cache-${{github.sha}}
       cache-directory: pr-files
