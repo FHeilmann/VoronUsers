@@ -69,29 +69,29 @@ jobs:
       - name: Save PR number
         run: |
           mkdir -p ${{ runner.temp }}/pr
-          echo "Ready for review" > ${{ runner.temp }}/pr/ready_label
-          echo ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
-          echo ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
+          echo -n "Ready for review" > ${{ runner.temp }}/pr/ready_label
+          echo -n ${{ github.event.number }} > ${{ runner.temp }}/pr/pr_number
+          echo -n ${{ github.run_id }} > ${{ runner.temp }}/pr/action_run_id
           mkdir -p ${{ runner.temp }}/pr/check_stl_corruption
-          echo ${{ needs.check_stl_corruption.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_stl_corruption/result
-          echo ${{ needs.check_stl_corruption.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_stl_corruption/job_id
-          echo "CR: STL Corruption" > ${{ runner.temp }}/pr/check_stl_corruption/error_label        
+          echo -n ${{ needs.check_stl_corruption.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_stl_corruption/result
+          echo -n ${{ needs.check_stl_corruption.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_stl_corruption/job_id
+          echo -n "CR: STL Corruption" > ${{ runner.temp }}/pr/check_stl_corruption/error_label        
           mkdir -p ${{ runner.temp }}/pr/check_stl_rotation
-          echo ${{ needs.check_stl_rotation.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_stl_rotation/result
-          echo ${{ needs.check_stl_rotation.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_stl_rotation/job_id
-          echo "CR: STL Rotation" > ${{ runner.temp }}/pr/check_stl_rotation/error_label          
+          echo -n ${{ needs.check_stl_rotation.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_stl_rotation/result
+          echo -n ${{ needs.check_stl_rotation.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_stl_rotation/job_id
+          echo -n "CR: STL Rotation" > ${{ runner.temp }}/pr/check_stl_rotation/error_label          
           mkdir -p ${{ runner.temp }}/pr/check_whitespace
-          echo ${{ needs.check_whitespace.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_whitespace/result
-          echo ${{ needs.check_whitespace.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_whitespace/job_id
-          echo "CR: Files & Folders" > ${{ runner.temp }}/pr/check_whitespace/error_label
+          echo -n ${{ needs.check_whitespace.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_whitespace/result
+          echo -n ${{ needs.check_whitespace.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_whitespace/job_id
+          echo -n "CR: Files & Folders" > ${{ runner.temp }}/pr/check_whitespace/error_label
           mkdir -p ${{ runner.temp }}/pr/check_metadata
-          echo ${{ needs.check_metadata.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_metadata/result
-          echo ${{ needs.check_metadata.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_metadata/job_id
-          echo "CR: Metadata Files" > ${{ runner.temp }}/pr/check_metadata/error_label
+          echo -n ${{ needs.check_metadata.outputs.extended-outcome }} > ${{ runner.temp }}/pr/check_metadata/result
+          echo -n ${{ needs.check_metadata.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/check_metadata/job_id
+          echo -n "CR: Metadata Files" > ${{ runner.temp }}/pr/check_metadata/error_label
           mkdir -p ${{ runner.temp }}/pr/preview_readme
-          echo ${{ needs.preview_readme.outputs.extended-outcome }} > ${{ runner.temp }}/pr/preview_readme/result
-          echo ${{ needs.preview_readme.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/preview_readme/job_id
-          echo "CR: Readme Preview" > ${{ runner.temp }}/pr/preview_readme/error_label
+          echo -n ${{ needs.preview_readme.outputs.extended-outcome }} > ${{ runner.temp }}/pr/preview_readme/result
+          echo -n ${{ needs.preview_readme.outputs.numeric-job-id}} > ${{ runner.temp }}/pr/preview_readme/job_id
+          echo -n "CR: Readme Preview" > ${{ runner.temp }}/pr/preview_readme/error_label
       - uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05
         with:
           name: pr
